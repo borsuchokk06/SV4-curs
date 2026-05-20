@@ -1,179 +1,179 @@
-# SportArena — Online platform for managing a sports apparel store
+# SportArena — онлайн-платформа для управления магазином спортивной одежды
 
-Course project for the discipline **"Средства взаимодействия человека с вычислительными системами"** (Belarusian-Russian University, faculty of Software Engineering / Computer Science).
+Курсовой проект по дисциплине **"Средства взаимодействия человека с вычислительными системами"** (Белорусско-Российский университет, факультет программной инженерии / компьютерных наук).
 
-A full-stack web application that runs a complete sports apparel storefront with a customer-facing site **and** a back-office admin panel.
+Полноценное full-stack веб-приложение для спортивного магазина: с клиентской витриной для покупателей **и** административной панелью для управления данными.
 
-## Tech stack
+## Технологический стек
 
-| Layer | Tech |
+| Слой | Технологии |
 | --- | --- |
 | Frontend | React 18 · TypeScript · Vite · Material UI · Redux Toolkit · React Router 6 · Recharts · Axios |
 | Backend | Node.js 18+ · Express 4 · Sequelize 6 · JWT auth · bcryptjs · PDFKit |
-| Database | PostgreSQL |
-| Tools | npm scripts, ESM modules |
+| База данных | PostgreSQL |
+| Инструменты | npm scripts, ESM modules |
 
-## Project structure
+## Структура проекта
 
 ```
 /
-├── server/                 — Express + Sequelize backend
+├── server/                 — backend на Express + Sequelize
 │   └── src/
-│       ├── config/         — DB connection
-│       ├── models/         — 10 Sequelize models, 3NF
-│       ├── routes/         — REST endpoints
-│       ├── middleware/     — auth, error handlers
-│       ├── utils/          — PDF generator
-│       └── seeders/        — seed script (200+ rows)
-└── client/                 — Vite + React + TS frontend
+│       ├── config/         — подключение к базе данных
+│       ├── models/         — 10 моделей Sequelize, 3НФ
+│       ├── routes/         — REST-эндпоинты
+│       ├── middleware/     — авторизация, обработчики ошибок
+│       ├── utils/          — генератор PDF
+│       └── seeders/        — скрипт наполнения БД (200+ записей)
+└── client/                 — frontend на Vite + React + TS
     └── src/
-        ├── api/            — axios + endpoints
-        ├── components/     — reusable UI (Header, Footer, ProductCard, …)
-        ├── pages/          — customer + admin pages
-        ├── store/          — Redux slices (auth, cart, filters, wishlist, snackbar)
-        ├── theme/          — MUI theme
-        └── types/          — shared TS types
+        ├── api/            — axios и функции для работы с API
+        ├── components/     — переиспользуемые UI-компоненты (Header, Footer, ProductCard, …)
+        ├── pages/          — страницы покупателя и администратора
+        ├── store/          — Redux-слайсы (auth, cart, filters, wishlist, snackbar)
+        ├── theme/          — тема MUI
+        └── types/          — общие TypeScript-типы
 ```
 
-## Database — 10 tables in 3NF
+## База данных — 10 таблиц в 3НФ
 
-`users`, `categories`, `brands`, `products`, `product_sizes`, `orders`, `order_items`, `reviews`, `wishlist`, `promo_codes`. Relationships are enforced through foreign keys; the `User ↔ Product` many-to-many wishlist uses an explicit join table.
+`users`, `categories`, `brands`, `products`, `product_sizes`, `orders`, `order_items`, `reviews`, `wishlist`, `promo_codes`. Связи реализованы через внешние ключи; связь многие-ко-многим `User ↔ Product` для списка желаний вынесена в отдельную таблицу.
 
-## Features
+## Возможности
 
-### Customer
-- Register / log in (JWT)
-- Browse catalog with filters (category, brand, gender, sport, size, price range, popular) and sort
-- Full-text search on product name
-- Product detail page with size picker, stock indicator, image, description, reviews & ratings
-- Wishlist (persisted in DB + `localStorage`)
-- Shopping cart with quantity controls (persisted in `localStorage`)
-- Promo codes (`WELCOME10`, `SPORT20`, `SUMMER15`, `BLACKFRI30`, `STUDENT5` seeded)
-- Checkout with shipping details and payment method choice
-- Order history + per-order detail with **downloadable PDF receipt**
-- Editable user profile
+### Покупатель
+- Регистрация и вход в систему (JWT)
+- Просмотр каталога с фильтрами (категория, бренд, пол, вид спорта, размер, диапазон цены, популярные товары) и сортировкой
+- Полнотекстовый поиск по названию товара
+- Страница товара с выбором размера, индикатором наличия, изображением, описанием, отзывами и рейтингом
+- Список желаний (хранится в БД и `localStorage`)
+- Корзина с управлением количеством товаров (хранится в `localStorage`)
+- Промокоды (`WELCOME10`, `SPORT20`, `SUMMER15`, `BLACKFRI30`, `STUDENT5` добавляются через seed-скрипт)
+- Оформление заказа с данными доставки и выбором способа оплаты
+- История заказов и детальная страница заказа с **загружаемым PDF-чеком**
+- Редактируемый профиль пользователя
 
-### Admin
-- Dashboard with KPI cards + revenue trend chart (area), top products (bar), orders by status (pie)
-- Products CRUD (with sizes/stock management)
-- Orders list with status filter, status updates
-- Users list with role management
-- Categories & brands management
-- Promo codes CRUD
-- **Downloadable sales report PDF** for any date range
+### Администратор
+- Dashboard с KPI-карточками, графиком выручки (area), топом товаров (bar) и распределением заказов по статусам (pie)
+- CRUD для товаров с управлением размерами и остатками
+- Список заказов с фильтром по статусу и обновлением статусов
+- Список пользователей с управлением ролями
+- Управление категориями и брендами
+- CRUD для промокодов
+- **Загружаемый PDF-отчёт по продажам** за любой диапазон дат
 
-### UX & technical
-- Adaptive design: desktop (≥1200), tablet (≥600), mobile (320+). Mobile uses drawer-based filter panel and burger nav.
-- Cart, filters and wishlist state survives page reload via `localStorage`. Reset buttons clear it.
-- RESTful API with consistent JSON shape and proper status codes
-- Auth via JWT in `Authorization: Bearer …` header
-- 25+ MUI components used (Card, Button, TextField, Select, Slider, Pagination, Table, Tabs, Drawer, Dialog, Snackbar, Chip, Badge, Avatar, Tooltip, Switch, ToggleButton, Rating, Alert, Breadcrumbs, Accordion, Skeleton, Menu, IconButton, …)
+### UX и технические особенности
+- Адаптивный дизайн: desktop (≥1200), tablet (≥600), mobile (320+). На мобильных устройствах фильтры открываются в drawer-панели, навигация — через burger menu.
+- Состояние корзины, фильтров и списка желаний сохраняется после перезагрузки страницы через `localStorage`. Кнопки сброса очищают сохранённые данные.
+- RESTful API с единым JSON-форматом ответа и корректными HTTP-статусами
+- Авторизация через JWT в заголовке `Authorization: Bearer …`
+- Использовано 25+ компонентов MUI (Card, Button, TextField, Select, Slider, Pagination, Table, Tabs, Drawer, Dialog, Snackbar, Chip, Badge, Avatar, Tooltip, Switch, ToggleButton, Rating, Alert, Breadcrumbs, Accordion, Skeleton, Menu, IconButton, …)
 
-## Getting started
+## Начало работы
 
-### 1. Prerequisites
+### 1. Требования
 
-- **Node.js 18+** and **npm**
-- **PostgreSQL 14+** running locally (or a remote instance)
+- **Node.js 18+** и **npm**
+- **PostgreSQL 14+**, запущенный локально или на удалённом сервере
 
-Create an empty database:
+Создайте пустую базу данных:
 
 ```sql
 CREATE DATABASE sportstore;
 ```
 
-### 2. Install dependencies
+### 2. Установка зависимостей
 
 ```bash
 npm run install:all
 ```
 
-### 3. Configure server env
+### 3. Настройка переменных окружения сервера
 
 ```bash
 cd server
 cp .env.example .env
-# edit .env — at minimum check DB_USER / DB_PASSWORD
+# отредактируйте .env — минимум проверьте DB_USER / DB_PASSWORD
 ```
 
-### 4. Seed the database
+### 4. Наполнение базы данных
 
-This drops and rebuilds every table, then fills it with 200+ rows of realistic test data (10 categories, 10 brands, 25 products, ~150 product_sizes, 12 customers + 1 admin, 25 orders, ~60 order items, ~35 reviews, ~25 wishlist entries, 6 promo codes).
+Команда удаляет и заново создаёт все таблицы, а затем добавляет 200+ реалистичных тестовых записей: 10 категорий, 10 брендов, 25 товаров, около 150 записей `product_sizes`, 12 покупателей + 1 администратора, 25 заказов, около 60 позиций заказов, около 35 отзывов, около 25 записей списка желаний и 6 промокодов.
 
 ```bash
 npm run seed
 ```
 
-You should see `=== TOTAL ROWS: ... ===` at the end.
+В конце выполнения должно появиться сообщение `=== TOTAL ROWS: ... ===`.
 
-### 5. Run development servers
+### 5. Запуск серверов разработки
 
-In two terminals:
+В двух терминалах:
 
 ```bash
-# Terminal 1 — API on :4000
+# Терминал 1 — API на :4000
 npm run dev:server
 
-# Terminal 2 — Vite on :5173 (proxies /api → :4000)
+# Терминал 2 — Vite на :5173 (проксирует /api → :4000)
 npm run dev:client
 ```
 
-Open **http://localhost:5173**
+Откройте **http://localhost:5173**.
 
-### Default accounts
+### Учётные записи по умолчанию
 
-| Role | Email | Password |
+| Роль | Email | Пароль |
 | --- | --- | --- |
-| Admin | `admin@sportarena.com` | `admin12345` |
-| Customer | `ivan@mail.com` | `user12345` |
-| Customer | `olga@mail.com` | `user12345` |
+| Администратор | `admin@sportarena.com` | `admin12345` |
+| Покупатель | `ivan@mail.com` | `user12345` |
+| Покупатель | `olga@mail.com` | `user12345` |
 
-(any of the 12 seeded customers uses password `user12345`)
+Любой из 12 тестовых покупателей использует пароль `user12345`.
 
-## Build for production
+## Сборка для production
 
 ```bash
-npm run build:client   # produces client/dist
-npm run start          # starts the API
+npm run build:client   # создаёт client/dist
+npm run start          # запускает API
 ```
 
-You can serve `client/dist` from any static host and point it at the API base URL.
+Папку `client/dist` можно разместить на любом статическом хостинге и направить приложение на базовый URL API.
 
-## Browser support
+## Поддержка браузеров
 
-Tested on the latest **Google Chrome**. Per project requirements.
+Приложение протестировано в актуальной версии **Google Chrome** согласно требованиям проекта.
 
-## API quick reference
+## Краткий справочник API
 
-| Method | Path | Auth | Purpose |
+| Метод | Путь | Доступ | Назначение |
 | --- | --- | --- | --- |
-| POST | `/api/auth/register` | — | Register customer |
-| POST | `/api/auth/login` | — | Log in |
-| GET | `/api/auth/me` | user | Current user |
-| PATCH | `/api/auth/me` | user | Update profile |
-| GET | `/api/products` | — | List with filters/sort/pagination |
-| GET | `/api/products/popular` | — | Featured products |
-| GET | `/api/products/:id` | — | Product detail |
-| POST/PATCH/DELETE | `/api/products[/:id]` | admin | CRUD |
-| GET | `/api/categories`, `/api/brands` | — | Lists |
-| POST/PATCH/DELETE | `/api/categories`, `/api/brands` | admin | CRUD |
-| POST | `/api/orders` | user | Place order from cart |
-| GET | `/api/orders/mine` | user | My orders |
-| GET | `/api/orders` | admin | All orders |
-| GET | `/api/orders/:id` | user | Order detail |
-| PATCH | `/api/orders/:id/status` | admin | Change status |
-| GET | `/api/reviews/product/:id` | — | Product reviews |
-| POST | `/api/reviews` | user | Add/update review |
-| DELETE | `/api/reviews/:id` | user/admin | Remove |
-| GET/POST/DELETE | `/api/wishlist[/:id]` | user | Wishlist |
-| GET | `/api/promo-codes/validate/:code` | — | Check code |
-| GET/POST/PATCH/DELETE | `/api/promo-codes[/:id]` | admin | CRUD |
-| GET | `/api/users` | admin | Users list |
-| PATCH | `/api/users/:id/role` | admin | Change role |
-| GET | `/api/reports/analytics` | admin | Dashboard data |
-| GET | `/api/reports/sales-pdf` | admin | Sales PDF |
-| GET | `/api/reports/order-pdf/:id` | user/admin | Order receipt PDF |
+| POST | `/api/auth/register` | — | Регистрация покупателя |
+| POST | `/api/auth/login` | — | Вход в систему |
+| GET | `/api/auth/me` | user | Текущий пользователь |
+| PATCH | `/api/auth/me` | user | Обновление профиля |
+| GET | `/api/products` | — | Список товаров с фильтрами, сортировкой и пагинацией |
+| GET | `/api/products/popular` | — | Популярные товары |
+| GET | `/api/products/:id` | — | Детальная информация о товаре |
+| POST/PATCH/DELETE | `/api/products[/:id]` | admin | CRUD для товаров |
+| GET | `/api/categories`, `/api/brands` | — | Списки категорий и брендов |
+| POST/PATCH/DELETE | `/api/categories`, `/api/brands` | admin | CRUD для категорий и брендов |
+| POST | `/api/orders` | user | Создание заказа из корзины |
+| GET | `/api/orders/mine` | user | Мои заказы |
+| GET | `/api/orders` | admin | Все заказы |
+| GET | `/api/orders/:id` | user | Детали заказа |
+| PATCH | `/api/orders/:id/status` | admin | Изменение статуса заказа |
+| GET | `/api/reviews/product/:id` | — | Отзывы о товаре |
+| POST | `/api/reviews` | user | Добавление или обновление отзыва |
+| DELETE | `/api/reviews/:id` | user/admin | Удаление отзыва |
+| GET/POST/DELETE | `/api/wishlist[/:id]` | user | Список желаний |
+| GET | `/api/promo-codes/validate/:code` | — | Проверка промокода |
+| GET/POST/PATCH/DELETE | `/api/promo-codes[/:id]` | admin | CRUD для промокодов |
+| GET | `/api/users` | admin | Список пользователей |
+| PATCH | `/api/users/:id/role` | admin | Изменение роли пользователя |
+| GET | `/api/reports/analytics` | admin | Данные dashboard |
+| GET | `/api/reports/sales-pdf` | admin | PDF-отчёт по продажам |
+| GET | `/api/reports/order-pdf/:id` | user/admin | PDF-чек заказа |
 
-## License
+## Лицензия
 
-Course project — for educational use only.
+Курсовой проект — только для образовательного использования.
