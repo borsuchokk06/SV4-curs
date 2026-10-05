@@ -3,13 +3,6 @@
   "private": true,
   "version": "1.0.0",
   "description": "Онлайн-платформа для управления магазином спортивной одежды",
-  "scripts": {
-    "install:all": "npm --prefix server install && npm --prefix client install",
-    "seed": "npm --prefix server run seed",
-    "dev:server": "npm --prefix server run dev",
-    "dev:client": "npm --prefix client run dev",
-    "build:client": "npm --prefix client run build",
-    "start": "npm --prefix server start"
-  },
-  "license": "MPL-2.0"
+  "license": "SEE LICENSE IN LICENSE.txt",
+  ...
 }
